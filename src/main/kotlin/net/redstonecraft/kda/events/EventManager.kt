@@ -52,11 +52,11 @@ fun ShardManager.eventManager(block: EventManagerDSL.() -> Unit): EventManager {
 class EventManagerDSL {
     internal val events = mutableMapOf<KClass<*>, (GenericEvent) -> Unit>()
 
-    inline fun <reified T: GenericEvent> on(noinline block: (T) -> Unit) = on(T::class, block)
+    inline fun <reified T: GenericEvent> on(noinline block: T.() -> Unit) = on(T::class, block)
 
     @Suppress("UNCHECKED_CAST")
     @PublishedApi
-    internal fun <T: GenericEvent> on(clazz: KClass<T>, block: (T) -> Unit) {
+    internal fun <T: GenericEvent> on(clazz: KClass<T>, block: T.() -> Unit) {
         events += clazz to block as (GenericEvent) -> Unit
     }
 }
