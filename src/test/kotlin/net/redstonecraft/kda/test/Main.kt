@@ -72,8 +72,8 @@ class TestBotLauncher: DiscordBotLauncher(*enumValues()) {
         }
         builder.eventManager {
             on<MessageDeleteEvent> {
-                if (it.isFromGuild) {
-                    it.channel.sendMessage("deleted msg").queue()
+                if (isFromGuild) {
+                    channel.sendMessage("deleted msg").queue()
                 }
             }
         }
