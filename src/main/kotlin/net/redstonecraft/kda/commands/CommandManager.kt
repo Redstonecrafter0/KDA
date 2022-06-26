@@ -98,6 +98,7 @@ fun JDA.updateKDACommands(guild: Guild? = null) {
             .map { it.commands.values }
             .flatten()
             .map { Commands.slash(it.name, it.description).apply {
+                isDefaultEnabled = it.defaultEnabled
                 addSubcommands(it.subCommands.values.mapSubCommands())
                 addSubcommandGroups(it.groupCommands.values.mapSubCommandGroups())
                 addOptions(it.argsFactory.properties.values.mapOptions())
@@ -144,19 +145,19 @@ class CommandDSL {
     internal val userCommands = mutableMapOf<String, UserCommand>()
     internal val messageCommands = mutableMapOf<String, MessageCommand>()
 
-    inline fun <reified T: Any> command(name: String, description: String, threaded: Boolean = false, noinline block: SlashCommandInteractionEvent.(T) -> Unit) = command(T::class, name, description, threaded, block)
+    inline fun <reified T: Any> command(name: String, description: String, threaded: Boolean = false, defaultEnabled: Boolean = true, noinline block: SlashCommandInteractionEvent.(T) -> Unit) = command(T::class, name, description, threaded, defaultEnabled, block)
 
     @PublishedApi
-    internal fun <T: Any> command(clazz: KClass<T>, name: String, description: String, threaded: Boolean = false, block: SlashCommandInteractionEvent.(T) -> Unit): SlashCommandAutocompleteDSL<T> {
-        val command = Command(name, description, block, threaded, emptyMap(), emptyMap(), clazz)
+    internal fun <T: Any> command(clazz: KClass<T>, name: String, description: String, threaded: Boolean = false, defaultEnabled: Boolean = true, block: SlashCommandInteractionEvent.(T) -> Unit): SlashCommandAutocompleteDSL<T> {
+        val command = Command(name, description, block, threaded, defaultEnabled, emptyMap(), emptyMap(), clazz)
         commands += name to command
         return SlashCommandAutocompleteDSL(command)
     }
 
-    fun command(name: String, description: String, block: CommandSetupDSL.() -> Unit) {
+    fun command(name: String, description: String, defaultEnabled: Boolean = true, block: CommandSetupDSL.() -> Unit) {
         val setup = CommandSetupDSL()
         setup.block()
-        commands += name to Command(name, description, null, false, setup.subcommands, setup.groupcommands, EmptyArgs::class)
+        commands += name to Command(name, description, null, false, defaultEnabled, setup.subcommands, setup.groupcommands, EmptyArgs::class)
     }
 
     fun userCommand(name: String, block: UserContextInteractionEvent.() -> Unit) {
