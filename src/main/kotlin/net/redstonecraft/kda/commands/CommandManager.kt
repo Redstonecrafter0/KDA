@@ -52,8 +52,8 @@ class CommandManager(
             event.subcommandName
         )
         event.subcommandName != null && event.subcommandGroup != null -> commands[event.name]?.groupCommands?.get(
-            event.subcommandName
-        )?.subCommands?.get(event.name)
+            event.subcommandGroup
+        )?.subCommands?.get(event.subcommandName)
         else -> null
     }
 }
