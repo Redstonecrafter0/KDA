@@ -12,9 +12,7 @@ abstract class DiscordBotLauncher(private val intents: Collection<GatewayIntent>
 
     constructor(vararg intents: GatewayIntent) : this(intents.toList())
 
-    companion object {
-        val logger = LoggerFactory.getLogger(DiscordBotLauncher::class.java)
-    }
+    val logger = LoggerFactory.getLogger(this::class.java)
 
     private lateinit var jda: JDA
     private lateinit var shardManager: ShardManager
