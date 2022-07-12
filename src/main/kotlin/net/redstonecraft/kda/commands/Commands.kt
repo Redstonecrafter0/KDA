@@ -57,7 +57,7 @@ class CommandArgsFactory<T: Any>(private val clazz: KClass<T>) {
     }
 
     val properties by lazy {
-        clazz.primaryConstructor!!.parameters.map { ArgumentParameter(it.name!!, it.findAnnotation<Description>()!!.value, it.isOptional, it.type.jvmErasure, translateType(it.type.jvmErasure), extractChoices(it), false, it) }.associateBy { it.name }
+        clazz.primaryConstructor!!.parameters.map { ArgumentParameter(it.name!!, it.findAnnotation<Description>()?.value ?: error("Missing @Description annotation"), it.isOptional, it.type.jvmErasure, translateType(it.type.jvmErasure), extractChoices(it), false, it) }.associateBy { it.name }
     }
 
     fun buildArgs(list: List<OptionMapping>): T {
