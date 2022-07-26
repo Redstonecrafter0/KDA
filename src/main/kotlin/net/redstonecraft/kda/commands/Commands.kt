@@ -78,14 +78,14 @@ class CommandArgsFactory<T: Any>(private val clazz: KClass<T>) {
                     User::class -> option.asUser
                     Role::class -> option.asRole
                     ChannelType::class -> option.channelType
-                    GuildChannel::class -> option.asGuildChannel
-                    GuildMessageChannel::class -> option.asMessageChannel
-                    TextChannel::class -> option.asTextChannel
-                    NewsChannel::class -> option.asNewsChannel
-                    ThreadChannel::class -> option.asThreadChannel
-                    AudioChannel::class -> option.asAudioChannel
-                    VoiceChannel::class -> option.asVoiceChannel
-                    StageChannel::class -> option.asStageChannel
+                    GuildChannel::class -> option.asChannel
+                    GuildMessageChannel::class -> option.asChannel.asGuildMessageChannel()
+                    TextChannel::class -> option.asChannel.asTextChannel()
+                    NewsChannel::class -> option.asChannel.asNewsChannel()
+                    ThreadChannel::class -> option.asChannel.asThreadChannel()
+                    AudioChannel::class -> option.asChannel.asAudioChannel()
+                    VoiceChannel::class -> option.asChannel.asVoiceChannel()
+                    StageChannel::class -> option.asChannel.asStageChannel()
                     else -> null
                 }
             }
@@ -128,7 +128,6 @@ class Command<T: Any>(
     override val description: String,
     override val runnable: (SlashCommandInteractionEvent.(T) -> Unit)?,
     override val threaded: Boolean,
-    val defaultEnabled: Boolean,
     val subCommands: Map<String, SubCommand<*>>,
     val groupCommands: Map<String, GroupCommand>,
     clazz: KClass<T>
