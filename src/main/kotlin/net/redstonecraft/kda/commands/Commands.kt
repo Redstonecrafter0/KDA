@@ -128,6 +128,7 @@ class Command<T: Any>(
     override val description: String,
     override val runnable: (SlashCommandInteractionEvent.(T) -> Unit)?,
     override val threaded: Boolean,
+    val defaultEnabled: Boolean,
     val subCommands: Map<String, SubCommand<*>>,
     val groupCommands: Map<String, GroupCommand>,
     clazz: KClass<T>
